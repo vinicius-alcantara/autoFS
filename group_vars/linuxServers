@@ -1,0 +1,7 @@
+ansible_port: 22
+ansible_user: vinicius
+ansible_password: <xxxxx>
+ansible_become: yes
+ansible_become_method: sudo
+ansible_become_user: root
+ansible_become_password: <xxxxxxxx>

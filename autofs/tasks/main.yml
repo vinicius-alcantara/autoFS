@@ -1,0 +1,54 @@
+---
+
+# tasks file for config autoFS
+ 
+ - name: Remove autofs package
+   yum:
+     name: autofs
+     state: absent
+   tags:
+     - reinstallAutofs
+
+ - name: Install autofs package
+   yum:
+     name: autofs
+     state: present
+   tags:
+     - installAutofs
+     - reinstallAutofs
+
+# - name: Comment line in /etc/fstab winth mount point /mnt/backup 
+#   ansible.builtin.lineinfile:
+#     path: /etc/fstab
+#     regexp: '^192.168.6.5:/backup'
+#     insertafter: '192.168.6.5:/backup'
+#     line: '#192.168.6.5:/backup  /mnt/backup  nfs     defaults        0 0'
+
+ - name: Config auto.master file
+   ansible.builtin.lineinfile:
+     path: /etc/auto.master
+     regexp: '^/misc'
+     insertafter: '/misc'
+     line: '/-   /etc/auto.misc'
+   tags:
+     - installAutofs
+     - reinstallAutofs
+
+ - name: Insert config shared in auto.misc file
+   ansible.builtin.lineinfile:
+     path: /etc/auto.misc
+     line: '/mnt/backup     -fstype=nfs,rw,bg,hard,intr,tcp,resvport     192.168.6.5:/backup'
+   tags:
+     - installAutofs
+     - reinstallAutofs
+
+ - name: Start autoFS service and Enable in system boot
+   ansible.builtin.systemd:
+     state: started
+     enabled: yes
+     name: autofs
+   tags:
+     - installAutofs
+     - reinstallAutofs
+
+ 

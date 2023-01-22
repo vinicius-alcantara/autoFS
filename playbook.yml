@@ -1,0 +1,4 @@
+- name: Check Dir
+  hosts: all
+  roles:
+    - autofs
